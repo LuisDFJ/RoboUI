@@ -1,0 +1,6 @@
+PyOpenGL
+PyOpenGL-accelerate
+PyQt5
+PyQt5-tools
+PyWavefront
+Numpy
