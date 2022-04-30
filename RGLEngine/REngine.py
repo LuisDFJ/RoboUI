@@ -9,7 +9,7 @@ class REngine( object ):
         self.VShaderPath = os.path.join( os.path.dirname( __file__ ), r"Shaders\RVertexShader.gs" )
         self.FShaderPath = os.path.join( os.path.dirname( __file__ ), r"Shaders\RFragmentShader.gs" )
         self.float32size = 4
-        GL.glClearColor( 0.0, 0.0, 1.0, 1.0 )
+        GL.glClearColor( 0.5, 0.5, 0.6, 1.0 )
         GL.glEnable(GL.GL_DEPTH_TEST)
 
     def _readShader(self, path):

@@ -3,38 +3,9 @@ from OpenGL import GL, GLU
 import numpy as np
 from RGLEngine.REngine import REngine
 from RGLEngine.RSolid import RSolid
+from RGLEngine.RDGM import RDGM
+from RGLEngine.RView import RView
 import math
-
-
-
-
-
-def rotate( axis, angle ):
-    st = math.sin( angle )
-    ct = math.cos( angle )
-    if axis == 'x':
-        matrix = np.array( [
-            1.0, 0.0, 0.0, 0.0,
-            0.0,  ct, -st, 0.0,
-            0.0,  st,  ct, 0.0,
-            0.0, 0.0, 0.0, 1.0
-        ] )
-    elif axis == 'y':
-        matrix = np.array( [
-             ct, 0.0,  st, 0.0,
-            0.0, 1.0, 0.0, 0.0,
-            -st, 0.0,  ct, 0.0,
-            0.0, 0.0, 0.0, 1.0
-        ] )
-    else:
-        matrix = np.array( [
-             ct, -st, 0.0, 0.0,
-             st,  ct, 0.0, 0.0,
-            0.0, 0.0, 1.0, 0.0,
-            0.0, 0.0, 0.0, 1.0
-        ] )
-    return matrix
-
 
 class RGLWidget( QtWidgets.QOpenGLWidget ):
     def __init__(self, parent=None):
@@ -56,22 +27,27 @@ class RGLWidget( QtWidgets.QOpenGLWidget ):
     def initializeGL(self):
         self.engine = REngine()
         
-        self.motor = RSolid( r".\RMedia\servo.obj", self.engine, 100 )
-        self.largo = RSolid( r".\RMedia\largo.obj", self.engine, 100 )
+        self.dgm = RDGM( -0.3, 0.3, 1.05)
+
+        self.view   = RView( self.engine, np.array( [ -3.0, 4.0, -2.5 ] ), np.array( [ -1.5, 1.5, 0.0 ] ), np.array( [ 1.0, 0.0, 0.0 ] ), self.width() / self.height() )
+        
+        self.link_1 = RSolid( r".\RMedia\link1_completo.obj", self.engine, 100, np.array( [-0.241, -0.1436, 0.0] ),rotX = math.radians(-90), rotY = math.radians( -7 ), rotZ = math.radians(-90))
+        self.link_2 = RSolid( r".\RMedia\link2_completo.obj", self.engine, 100, np.array( [-0.1457, -0.12, -0.2412]) ) 
+        self.link_3 = RSolid( r".\RMedia\link3_completo.obj", self.engine, 100, np.array( [-0.1457, -0.12, -0.2412] ) )
 
         self.engine.createShaderProgram()
         self.engine.useShaderProgram()
+
+        self.view.setView()
         
     def paintGL(self):
             self._open()
-            
-            transform = rotate( 'x', self.WaistValue )
-            
-            self.motor.draw( transform )
 
-            transform = rotate( 'x', self.ShoulderValue )
-
-            self.largo.draw( transform )
+            T0n = self.dgm.GenDGM( (self.WaistValue, self.ShoulderValue, self.ElbowValue) )
+            
+            self.link_1.draw( T0n[0] )
+            self.link_2.draw( T0n[1] )
+            self.link_3.draw( T0n[2] )
 
             self._close()
 
