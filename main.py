@@ -1,21 +1,37 @@
-from RGLEngine.RLoader import RLoader
-import numpy
-from RGLEngine.RDGM import RDGM
-import glm
+import serial
+import time
 
-#array = RLoader( path=r".\RMedia\link2_completo.obj", scale=100 ).array
-#print( numpy.max( array[:,2] ) / 2 )
 
-dgm = RDGM( 
-            [ False, False, False ],
-            [ 0, 2, 3 ],
-            [ glm.radians( -90 ), glm.radians( -90 ), glm.radians( 0 ) ],
-            [ 0, 4, 5 ],
-            [ 0, 0, 0 ]
-        )
+def encodeSerial( waist, shoulder, elbow ):
+    byteArray = ( int( waist ).to_bytes( 2, 'big' ) + 
+                int( shoulder ).to_bytes( 2, 'big' ) +
+                int( elbow ).to_bytes( 2, 'big' ) )
+    return b"<" + byteArray + b">"
 
-for i in range( 4 ):
-    angle = glm.radians( 15 * (i+1) )
-    T0n = dgm.GenDGM( [ angle, 0, 0 ] )
-    print( angle )
-    print( T0n[1] )
+
+def main():
+    com =  serial.Serial( "COM11", 115200 )
+    
+    val = encodeSerial( 1023,1023,1023 )
+
+    time.sleep( 2.0 )
+    com.write( val )
+    time.sleep( 0.5 )
+    com.write( val )
+    time.sleep( 0.4 )
+    com.write( val )
+    time.sleep( 0.3 )
+    com.write( val )
+    time.sleep( 0.2 )
+    com.write( val )
+    time.sleep( 0.1 )
+    com.write( val )
+
+    com.close()
+            
+            #com.write( b"A510B510C510S1530F\n" )
+
+
+main()
+
+#encodeSerial( 1023, 1023, 1023 )

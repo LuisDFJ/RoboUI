@@ -1,7 +1,9 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from RWidgets.RJointSlider import RJointSliderWidget
+from RWidgets.RSerialCom import RSerialCom
 from RWidgets.RStatusBar import RStatusBar
 from RWidgets.RGLWidget import RGLWidget
+from RWidgets.RPosition import RPosition
 
 class RMainWindow(object):
     def setupUI(self, MainWindow):
@@ -35,13 +37,21 @@ class RMainWindow(object):
         # OpenGL Widget
         self.glWidget = RGLWidget( widget )
         self.glWidget.setGeometry(QtCore.QRect(0, 0, 591, 531))
+        # COM Ports
+        self.SerialCom = RSerialCom( widget )
+        self.SerialCom.setGeometry(QtCore.QRect(640, 130, 220, 50))
         # Waist Slider
         self.WaistSlider    = RJointSliderWidget( widget, Title="Joint: Waist (Q/A)", MaxVal=100, MinVal=0 )
         self.WaistSlider    .setGeometry(QtCore.QRect(640, 190, 220, 50))
+        # Shoulder Slider
         self.ShoulderSlider = RJointSliderWidget( widget, Title="Joint: Shoulder (W/S)", MaxVal=100, MinVal=0 )
         self.ShoulderSlider .setGeometry(QtCore.QRect(640, 230, 220, 50))
+        # Elbow Slider
         self.ElbowSlider    = RJointSliderWidget( widget, Title="Joint: Elbow (E/D)", MaxVal=100, MinVal=0 )
         self.ElbowSlider    .setGeometry(QtCore.QRect(640, 270, 220, 50))
+        # Position Display
+        self.Position       = RPosition( widget )
+        self.Position       .setGeometry(QtCore.QRect(600, 340, 280, 150))
 
         
     def _setupMenuBar(self, widget):
