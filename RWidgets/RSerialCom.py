@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from serial.tools.list_ports import comports
+from RUtils.RAnglesUtil import getRobotAngle
 import serial
 import time
 
@@ -63,9 +64,9 @@ class RSerialCom( QtWidgets.QWidget ):
 
     def sendCommand( self, q ):
         if self.serial != None:
-            q1 = int( 1023 * q[0] / 300 )
-            q2 = int( 1023 * q[1] / 300 )
-            q3 = int( 1023 * q[2] / 300 )
+            q1 = getRobotAngle( q[0] )
+            q2 = getRobotAngle( q[1] )
+            q3 = getRobotAngle( q[2] )
             command = self.encodeSerial( q1, q2, q3 )
             self.serial.write( command )
             time.sleep( 0.05 )

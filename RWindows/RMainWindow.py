@@ -41,13 +41,13 @@ class RMainWindow(object):
         self.SerialCom = RSerialCom( widget )
         self.SerialCom.setGeometry(QtCore.QRect(640, 130, 220, 50))
         # Waist Slider
-        self.WaistSlider    = RJointSliderWidget( widget, Title="Joint: Waist (Q/A)", MaxVal=100, MinVal=0 )
+        self.WaistSlider    = RJointSliderWidget( widget, Title="Joint: Waist (Q/A)", MaxVal=150, MinVal=-150 )
         self.WaistSlider    .setGeometry(QtCore.QRect(640, 190, 220, 50))
         # Shoulder Slider
-        self.ShoulderSlider = RJointSliderWidget( widget, Title="Joint: Shoulder (W/S)", MaxVal=100, MinVal=0 )
+        self.ShoulderSlider = RJointSliderWidget( widget, Title="Joint: Shoulder (W/S)", MaxVal=150, MinVal=-150 )
         self.ShoulderSlider .setGeometry(QtCore.QRect(640, 230, 220, 50))
         # Elbow Slider
-        self.ElbowSlider    = RJointSliderWidget( widget, Title="Joint: Elbow (E/D)", MaxVal=100, MinVal=0 )
+        self.ElbowSlider    = RJointSliderWidget( widget, Title="Joint: Elbow (E/D)", MaxVal=150, MinVal=-150 )
         self.ElbowSlider    .setGeometry(QtCore.QRect(640, 270, 220, 50))
         # Position Display
         self.Position       = RPosition( widget )

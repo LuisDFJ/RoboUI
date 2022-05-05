@@ -1,5 +1,5 @@
 from PyQt5 import  QtWidgets
-from RWindows.RoboWIndow import RoboWindow
+from RWindows.RoboWindow import RoboWindow
 
 
 if __name__ == "__main__":

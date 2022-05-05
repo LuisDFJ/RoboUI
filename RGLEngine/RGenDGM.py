@@ -1,6 +1,7 @@
 import numpy as np
 from math import pi
 from RGLEngine.RTransformations import rotateX, rotateY, rotateZ, translate
+from RUtils.RAnglesUtil import getDGMAngle
 
 class RGenDGM():
     def __init__(self, L1=93.4, L2=93.5, L3=155.6):
@@ -10,6 +11,7 @@ class RGenDGM():
         
     def GetDGM( self, q ):
         n = len(q)
+        q = getDGMAngle( q )
         T = np.zeros([4,4,n+1])
         U = np.zeros([4,4,n+1])
         T0n = np.eye(4)
