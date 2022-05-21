@@ -4,6 +4,30 @@ from math import radians, degrees
 RESOLUTION  = 100
 DIVIDER     = 4
 
+class RSlider( QtWidgets.QSlider ):
+    def __init__( self, parent = None ):
+        super( RSlider, self ).__init__(parent=parent)
+        self.active = False
+
+    def mousePressEvent(self, ev: QtGui.QMouseEvent) -> None:
+        if self.active:
+            return super().mousePressEvent(ev)
+    def mouseReleaseEvent(self, ev: QtGui.QMouseEvent) -> None:
+        if self.active:
+            return super().mouseReleaseEvent(ev)
+    def mouseDoubleClickEvent(self, a0: QtGui.QMouseEvent) -> None:
+        if self.active:
+            return super().mouseDoubleClickEvent(a0)
+    def mouseMoveEvent(self, ev: QtGui.QMouseEvent) -> None:
+        if self.active:
+            return super().mouseMoveEvent(ev)
+    def keyPressEvent(self, ev: QtGui.QKeyEvent) -> None:
+        if self.active:
+            return super().keyPressEvent(ev)
+    def keyReleaseEvent(self, a0: QtGui.QKeyEvent) -> None:
+        if self.active:
+            return super().keyReleaseEvent(a0)
+
 class RJointSliderWidget( QtWidgets.QWidget ):
     def __init__(self, parent, Title="Joint: Waist (Q/A)", MaxVal=180, MinVal=0, Step=0.25):
         super(RJointSliderWidget, self).__init__(parent)
@@ -17,7 +41,7 @@ class RJointSliderWidget( QtWidgets.QWidget ):
         self.TitleLabel = QtWidgets.QLabel(self)
         self.TitleLabel.setObjectName("TitleLabel")
         # Slider Widget
-        self.Slider = QtWidgets.QSlider(self)
+        self.Slider = RSlider(self)
         self.Slider.setOrientation(QtCore.Qt.Horizontal)
         self.Slider.setObjectName("Slider")
         # Min Label
@@ -78,3 +102,15 @@ class RJointSliderWidget( QtWidgets.QWidget ):
 
     def decreaseTicks( self, tps=1 ):
         self.Slider.setValue( ( self.value() - tps * self.Step ) * RESOLUTION )
+
+    def setValue( self, val, mode='deg' ):
+        if mode == "rad" and self.mode == "deg":
+            val = degrees( val )
+        elif mode == "deg" and self.mode == "rad":
+            val = radians( val )
+        
+        ticks = int( val * RESOLUTION )
+        self.Slider.setValue( ticks )
+        
+    def activate( self, mode : bool = True ):
+        self.Slider.active = mode

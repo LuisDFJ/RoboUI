@@ -4,6 +4,8 @@ from RWidgets.RSerialCom import RSerialCom
 from RWidgets.RStatusBar import RStatusBar
 from RWidgets.RGLWidget import RGLWidget
 from RWidgets.RPosition import RPosition
+from RWidgets.RCoordinates import RCoordinates
+from RWidgets.RNavigationMode import RNavigationMode
 
 class RMainWindow(object):
     def setupUI(self, MainWindow):
@@ -25,7 +27,7 @@ class RMainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         MainWindow.setMenuBar(self.menubar)
         MainWindow.setStatusBar(self.statusbar)
-        #self.retranslateUi(MainWindow)
+        
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def setup(self):
@@ -37,21 +39,27 @@ class RMainWindow(object):
         # OpenGL Widget
         self.glWidget = RGLWidget( widget )
         self.glWidget.setGeometry(QtCore.QRect(0, 0, 591, 531))
+        # Navigation Mode
+        self.navMode = RNavigationMode( widget )
+        self.navMode.setGeometry(QtCore.QRect(670, 20, 180, 50))
         # COM Ports
         self.SerialCom = RSerialCom( widget )
-        self.SerialCom.setGeometry(QtCore.QRect(640, 130, 220, 50))
+        self.SerialCom.setGeometry(QtCore.QRect(640, 80, 220, 50))
         # Waist Slider
         self.WaistSlider    = RJointSliderWidget( widget, Title="Joint: Waist (Q/A)", MaxVal=150, MinVal=-150 )
-        self.WaistSlider    .setGeometry(QtCore.QRect(640, 190, 220, 50))
+        self.WaistSlider    .setGeometry(QtCore.QRect(640, 120, 220, 50))
         # Shoulder Slider
         self.ShoulderSlider = RJointSliderWidget( widget, Title="Joint: Shoulder (W/S)", MaxVal=150, MinVal=-150 )
-        self.ShoulderSlider .setGeometry(QtCore.QRect(640, 230, 220, 50))
+        self.ShoulderSlider .setGeometry(QtCore.QRect(640, 160, 220, 50))
         # Elbow Slider
         self.ElbowSlider    = RJointSliderWidget( widget, Title="Joint: Elbow (E/D)", MaxVal=150, MinVal=-150 )
-        self.ElbowSlider    .setGeometry(QtCore.QRect(640, 270, 220, 50))
+        self.ElbowSlider    .setGeometry(QtCore.QRect(640, 200, 220, 50))
+        # Coordinates Input
+        self.Coords       = RCoordinates( widget )
+        self.Coords       .setGeometry(QtCore.QRect(640, 250, 180, 90))
         # Position Display
         self.Position       = RPosition( widget )
-        self.Position       .setGeometry(QtCore.QRect(600, 340, 280, 150))
+        self.Position       .setGeometry(QtCore.QRect(600, 320, 280, 150))
 
         
     def _setupMenuBar(self, widget):
@@ -59,28 +67,3 @@ class RMainWindow(object):
 
     def _setupStatusBar(self, widget):
         self.statusbar.show()
-
-
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.DGMLabel.setText(_translate("MainWindow", "Direct Geometric Model"))
-        self.WaistLabel.setText(_translate("MainWindow", "Joints: Waist (q/a)"))
-        self.WaistMinLabel.setText(_translate("MainWindow", "0 rad"))
-        self.WaistMaxLabel.setText(_translate("MainWindow", "3.14 rad"))
-        self.ShoulderMinLabel.setText(_translate("MainWindow", "0 rad"))
-        self.ShoulderLabel.setText(_translate("MainWindow", "Joints: Shoulder (w/s)"))
-        self.ShoulderMaxLabel.setText(_translate("MainWindow", "3.14 rad"))
-        self.ElbowLabel.setText(_translate("MainWindow", "Joints: Elbow (e/d)"))
-        self.ElbowMinLabel.setText(_translate("MainWindow", "0 rad"))
-        self.ElbowMaxLabel.setText(_translate("MainWindow", "3.14 rad"))
-        self.IGMLabel.setText(_translate("MainWindow", "Inverse Geometric Model"))
-        self.XLabel.setText(_translate("MainWindow", "X axis"))
-        self.YLabel.setText(_translate("MainWindow", "Y axis"))
-        self.ZLabel.setText(_translate("MainWindow", "Z axis"))
-        self.DegreesButton.setText(_translate("MainWindow", "Degrees"))
-        self.DGMButton.setText(_translate("MainWindow", "DGM"))
-        self.IGMButton.setText(_translate("MainWindow", "IGM"))
-        self.ModeLabel.setText(_translate("MainWindow", "Mode"))
-
-    

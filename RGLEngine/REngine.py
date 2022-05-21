@@ -32,6 +32,10 @@ class REngine( object ):
         location = GL.glGetUniformLocation( self.shader, name )
         GL.glUniformMatrix4fv( location, 1, GL.GL_TRUE, matrix.astype( np.float32 ) )
 
+    def setUniform3fv(self, name, vector):
+        location = GL.glGetUniformLocation( self.shader, name )
+        GL.glUniform3fv( location, 1, vector.astype( np.float32 ) )
+
     def createVAO(self, vertices, elements=None):
         
         vao = GL.glGenVertexArrays( 1 )

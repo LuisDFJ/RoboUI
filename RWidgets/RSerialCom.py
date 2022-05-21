@@ -69,5 +69,6 @@ class RSerialCom( QtWidgets.QWidget ):
             q3 = getRobotAngle( q[2] )
             command = self.encodeSerial( q1, q2, q3 )
             self.serial.write( command )
-            time.sleep( 0.05 )
+            #print( command )
+            #time.sleep( 0.05 )
             
