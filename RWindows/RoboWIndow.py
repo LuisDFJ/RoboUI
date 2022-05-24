@@ -53,7 +53,12 @@ class RoboWindow( QMainWindow, RMainWindow ):
     def calculateIGM(self, mode : str='deg'):
         X = self.Coords.getCoords()
         q = self.IGM.GetIGM( X, mode=mode )
-        return q[ 2 ]
+        q_c = [ self.WaistSlider.value( "deg" ),
+                self.ShoulderSlider.value( "deg" ),
+                self.ElbowSlider.value( "deg" ) ]
+        sol = self.Solution.getBestSolution( q, q_c )
+        self.Solution.setSolution( q, mode, sol )
+        return q[ sol ]
 
     def calculateDGM(self, q = None):
         if q == None:

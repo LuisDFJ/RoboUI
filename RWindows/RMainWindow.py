@@ -4,6 +4,7 @@ from RWidgets.RSerialCom import RSerialCom
 from RWidgets.RStatusBar import RStatusBar
 from RWidgets.RGLWidget import RGLWidget
 from RWidgets.RPosition import RPosition
+from RWidgets.RSolution import RSolution
 from RWidgets.RCoordinates import RCoordinates
 from RWidgets.RNavigationMode import RNavigationMode
 
@@ -60,6 +61,9 @@ class RMainWindow(object):
         # Position Display
         self.Position       = RPosition( widget )
         self.Position       .setGeometry(QtCore.QRect(600, 320, 280, 150))
+        # Solutions Display
+        self.Solution       = RSolution( widget )
+        self.Solution       .setGeometry(QtCore.QRect(600, 450, 250, 80))
 
         
     def _setupMenuBar(self, widget):
