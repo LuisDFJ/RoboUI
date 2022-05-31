@@ -18,9 +18,14 @@ class RoboWindow( QMainWindow, RMainWindow ):
         self.Coords.YCoord.valueChanged.connect(self.getCoordsValue)
         self.Coords.ZCoord.valueChanged.connect(self.getCoordsValue)
 
+        self.Trajectory.step.clicked.connect( self.nextStep )
+        self.Trajectory.play.clicked.connect( self.playTraj )
+        self.Trajectory.stop.clicked.connect( self.stopTraj )
+
         self.navMode.button.clicked.connect(self.toggleMode)
 
         self.activeKeys = []
+        self.activeTraj = False
 
         self.mode = 'IGM'
         self.DGM = RGenDGM()
@@ -35,9 +40,13 @@ class RoboWindow( QMainWindow, RMainWindow ):
         timer_keyboard.setInterval(20)
         timer_keyboard.timeout.connect(self.keyboardHandler)
 
+        timer_trajectory = QTimer(self)
+        timer_trajectory.setInterval(100)
+        timer_trajectory.timeout.connect(self.trajHandler)
+
         timer_graphics.start()
         timer_keyboard.start()
-
+        timer_trajectory.start()
 
     def connectPort(self):
         self.SerialCom.startConnection()
@@ -65,7 +74,27 @@ class RoboWindow( QMainWindow, RMainWindow ):
             q = [ self.WaistSlider.value( "rad" ), self.ShoulderSlider.value( "rad" ), self.ElbowSlider.value( "rad" ) ]
         T = self.DGM.GetDGM( q )
         return T
+
+    def playTraj(self):
+        if self.Trajectory.trajectories != None:
+            self.activeTraj = True
     
+    def stopTraj(self):
+        self.activeTraj = False
+    
+    def nextStep(self):
+        self.toggleDGMIGM( 'TRAJ' )
+        joints = self.Trajectory.next()
+        if joints != None:
+            if joints != False:
+                q = list( joints )
+                self.setSliders( q, 'rad' )
+                self.setSimulation( q )
+                self.setPosition()
+                self.setServos()
+        else:
+            self.activeTraj = False
+
     def setSliders(self, q, mode : str='rad' ):
         self.WaistSlider    .setValue( q[0], mode )
         self.ShoulderSlider .setValue( q[1], mode )
@@ -81,6 +110,8 @@ class RoboWindow( QMainWindow, RMainWindow ):
             self.toggleDGMIGM( 'DGM' )
         elif self.mode == 'DGM':
             self.toggleDGMIGM( 'IGM' )
+        elif self.mode == 'TRAJ':
+            self.toggleDGMIGM( 'IGM' )
 
     def toggleDGMIGM(self, mode):
         if self.mode != mode:
@@ -88,9 +119,12 @@ class RoboWindow( QMainWindow, RMainWindow ):
             if mode == 'IGM':
                 self.activateCoords( True )
                 self.activateSliders( False )
-            else:
+            elif mode == 'DGM':
                 self.activateCoords( False )
                 self.activateSliders( True )
+            elif mode == 'TRAJ':
+                self.activateCoords( False )
+                self.activateSliders( False )
             self.navMode.setMode( mode )
 
     def getCoordsValue(self):
@@ -102,7 +136,6 @@ class RoboWindow( QMainWindow, RMainWindow ):
                 T = self.calculateDGM( q )
                 self.Position.setPosition( T )
                 self.setServos()
-            
 
     def getWaistValue(self):
         if self.mode == 'DGM':
@@ -140,61 +173,66 @@ class RoboWindow( QMainWindow, RMainWindow ):
         self.glWidget = None
         print( "GoodBye" )
 
+    def trajHandler(self):
+        if self.activeTraj:
+            self.nextStep()
+
     def keyboardHandler(self):
         if len( self.activeKeys ):
             tps = self.statusbar.getTps()
             if Qt.Key.Key_Escape in self.activeKeys:
                 self.close()
 
-            move_keys = [ Qt.Key.Key_Q, Qt.Key.Key_A,
-                          Qt.Key.Key_W, Qt.Key.Key_S,
-                          Qt.Key.Key_E, Qt.Key.Key_D ]
+            if self.mode != "TRAJ":
+                move_keys = [ Qt.Key.Key_Q, Qt.Key.Key_A,
+                            Qt.Key.Key_W, Qt.Key.Key_S,
+                            Qt.Key.Key_E, Qt.Key.Key_D ]
 
-            if any( [ x in self.activeKeys for x in move_keys ] ):
+                if any( [ x in self.activeKeys for x in move_keys ] ):
+                    if Qt.Key.Key_Shift in self.activeKeys:
+                        self.toggleDGMIGM( 'DGM' )
+                    else:
+                        self.toggleDGMIGM( 'IGM' )
+
                 if Qt.Key.Key_Shift in self.activeKeys:
-                    self.toggleDGMIGM( 'DGM' )
+                    # Joints control
+                    if Qt.Key.Key_Q in self.activeKeys:
+                        self.WaistSlider.increaseTicks(tps)
+                    elif Qt.Key.Key_A in self.activeKeys:
+                        self.WaistSlider.decreaseTicks(tps)
+
+                    if Qt.Key.Key_W in self.activeKeys:
+                        self.ShoulderSlider.increaseTicks(tps)
+                    elif Qt.Key.Key_S in self.activeKeys:
+                        self.ShoulderSlider.decreaseTicks(tps)
+
+                    if Qt.Key.Key_E in self.activeKeys:
+                        self.ElbowSlider.increaseTicks(tps)
+                    elif Qt.Key.Key_D in self.activeKeys:
+                        self.ElbowSlider.decreaseTicks(tps)
                 else:
-                    self.toggleDGMIGM( 'IGM' )
+                    # Linear control
+                    if Qt.Key.Key_Q in self.activeKeys:
+                        self.Coords.increaseTicks(tps=tps, axis='x')
+                    elif Qt.Key.Key_A in self.activeKeys:
+                        self.Coords.decreaseTicks(tps=tps, axis='x')
 
-            if Qt.Key.Key_Shift in self.activeKeys:
-                # Joints control
-                if Qt.Key.Key_Q in self.activeKeys:
-                    self.WaistSlider.increaseTicks(tps)
-                elif Qt.Key.Key_A in self.activeKeys:
-                    self.WaistSlider.decreaseTicks(tps)
+                    if Qt.Key.Key_W in self.activeKeys:
+                        self.Coords.increaseTicks(tps=tps, axis='y')
+                    elif Qt.Key.Key_S in self.activeKeys:
+                        self.Coords.decreaseTicks(tps=tps, axis='y')
 
-                if Qt.Key.Key_W in self.activeKeys:
-                    self.ShoulderSlider.increaseTicks(tps)
-                elif Qt.Key.Key_S in self.activeKeys:
-                    self.ShoulderSlider.decreaseTicks(tps)
+                    if Qt.Key.Key_E in self.activeKeys:
+                        self.Coords.increaseTicks(tps=tps, axis='z')
+                    elif Qt.Key.Key_D in self.activeKeys:
+                        self.Coords.decreaseTicks(tps=tps, axis='z')
 
-                if Qt.Key.Key_E in self.activeKeys:
-                    self.ElbowSlider.increaseTicks(tps)
-                elif Qt.Key.Key_D in self.activeKeys:
-                    self.ElbowSlider.decreaseTicks(tps)
-            else:
-                # Linear control
-                if Qt.Key.Key_Q in self.activeKeys:
-                    self.Coords.increaseTicks(tps=tps, axis='x')
-                elif Qt.Key.Key_A in self.activeKeys:
-                    self.Coords.decreaseTicks(tps=tps, axis='x')
-
-                if Qt.Key.Key_W in self.activeKeys:
-                    self.Coords.increaseTicks(tps=tps, axis='y')
-                elif Qt.Key.Key_S in self.activeKeys:
-                    self.Coords.decreaseTicks(tps=tps, axis='y')
-
-                if Qt.Key.Key_E in self.activeKeys:
-                    self.Coords.increaseTicks(tps=tps, axis='z')
-                elif Qt.Key.Key_D in self.activeKeys:
-                    self.Coords.decreaseTicks(tps=tps, axis='z')
-
-            if Qt.Key.Key_Plus in self.activeKeys:
-                self.statusbar.increaseTps()
-                self.statusbar.show()
-            elif Qt.Key.Key_Minus in self.activeKeys:
-                self.statusbar.decreaseTps()
-                self.statusbar.show()
+                if Qt.Key.Key_Plus in self.activeKeys:
+                    self.statusbar.increaseTps()
+                    self.statusbar.show()
+                elif Qt.Key.Key_Minus in self.activeKeys:
+                    self.statusbar.decreaseTps()
+                    self.statusbar.show()
             
 
     def keyPressEvent(self, e):

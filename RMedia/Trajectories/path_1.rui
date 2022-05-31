@@ -1,0 +1,21 @@
+var1 = (0, 0, 0);
+var2 = (0, 0, 10);
+var3 = (0, 0, 20);
+var4 = (0, 0, 30);
+var5 = (0, 10, 40);
+var6 = (0, 20, 40);
+var7 = (0, 30, 40);
+var8 = (0, 40, 40);
+var9 = (0, 50, 40);
+
+SETJ: (var1);
+SETJ: (var2);
+SETJ: (var3);
+SETJ: (var4);
+PASS: 5;
+PASS: 5;
+SETJ: (var5);
+SETJ: (var6);
+SETJ: (var7);
+SETJ: (var8);
+SETJ: (var9);

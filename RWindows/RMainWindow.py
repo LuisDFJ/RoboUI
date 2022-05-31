@@ -1,12 +1,13 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from RWidgets.RJointSlider import RJointSliderWidget
-from RWidgets.RSerialCom import RSerialCom
-from RWidgets.RStatusBar import RStatusBar
-from RWidgets.RGLWidget import RGLWidget
-from RWidgets.RPosition import RPosition
-from RWidgets.RSolution import RSolution
-from RWidgets.RCoordinates import RCoordinates
-from RWidgets.RNavigationMode import RNavigationMode
+from RWidgets.RJointSlider      import RJointSliderWidget
+from RWidgets.RSerialCom        import RSerialCom
+from RWidgets.RStatusBar        import RStatusBar
+from RWidgets.RGLWidget         import RGLWidget
+from RWidgets.RPosition         import RPosition
+from RWidgets.RSolution         import RSolution
+from RWidgets.RTrajectory       import RTrajectory
+from RWidgets.RCoordinates      import RCoordinates
+from RWidgets.RNavigationMode   import RNavigationMode
 
 class RMainWindow(object):
     def setupUI(self, MainWindow):
@@ -60,10 +61,13 @@ class RMainWindow(object):
         self.Coords       .setGeometry(QtCore.QRect(640, 250, 180, 90))
         # Position Display
         self.Position       = RPosition( widget )
-        self.Position       .setGeometry(QtCore.QRect(600, 320, 280, 150))
+        self.Position       .setGeometry(QtCore.QRect(600, 320, 280, 100))
         # Solutions Display
         self.Solution       = RSolution( widget )
-        self.Solution       .setGeometry(QtCore.QRect(600, 450, 250, 80))
+        self.Solution       .setGeometry(QtCore.QRect(600, 400, 250, 75))
+        # Trajectory Widget
+        self.Trajectory     = RTrajectory( widget )
+        self.Trajectory     .setGeometry( QtCore.QRect(640, 480, 180, 80) )
 
         
     def _setupMenuBar(self, widget):

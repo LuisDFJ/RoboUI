@@ -1,0 +1,10 @@
+var1 = (0, 0, 0);
+var3 = (220, 0, 220);
+var4 = (120, 50, 120);
+
+SETJ: (var1);
+PASS: 10;
+MOVEJ: (var3);
+PASS: 10;
+MOVEL: (var4);
+MOVEL: (220, 50, 220);
