@@ -1,17 +1,18 @@
 import re
 import numpy as np
+from math import pi
 from RUtils.RTypes import RPoint, RJoint
 from RGLEngine.RGenDGM import RGenDGM
 from RGLEngine.RGenIGM import RGenIGM
-from RUtils.RInterpolation import RLinearInterpolator
-
+from RUtils.RInterpolation import RLinearInterpolator, RCircularInterpolator
 
 class RTrajectories():
     VALID_COMMANDS = [ "movej", "movel", "movec", "setj", "pass" ]
-    def __init__(self, file : str, mode : str = 'rad', res : float = 10):
+    def __init__(self, file : str, mode : str = 'rad', res : float = 1, res_c : float = pi / 16 ):
         self.file = file
         self.mode = mode
         self.res = res
+        self.res_c = res_c
         self.commands = []
         self.variables = {}
         self.DGM = RGenDGM()
@@ -97,8 +98,9 @@ class RTrajectories():
             yield self.genIGM( p )
 
     def movec( self, prev : RPoint, mid : RPoint, pos : RPoint ):
-        for _ in range( 5 ):
-            yield self.genIGM( pos )
+        cir = RCircularInterpolator( prev, mid, pos, self.res_c )
+        for p in cir.circular_interpol():
+            yield self.genIGM( p )
 
     def runPath(self, exe='loop'):
         prev = RPoint()
@@ -111,25 +113,25 @@ class RTrajectories():
                         yield False
                 else:
                     if mode == 'movej':
-                        print( "MOVE J" )
+                        #print( "MOVE J" )
                         prev = params[0]
                         joints = self.movej( params[0] )
                         yield joints
                     elif mode == 'movel':
-                        print( "MOVE L" )
+                        #print( "MOVE L" )
                         pos = params[0]
                         for joints in self.movel( prev, pos ):
                             yield joints
                         prev = pos
                     elif mode == 'movec':
-                        print( "MOVE C" )
+                        #print( "MOVE C" )
                         mid = params[0]
                         pos = params[1]
                         for joints in self.movec( prev, mid, pos ):
                             yield joints
                         prev = pos
                     elif mode == 'setj':
-                        print( "SET J" )
+                        #print( "SET J" )
                         joints = params[0]
                         joints = RJoint( joints.x, joints.y, joints.z )
                         joints.parse()

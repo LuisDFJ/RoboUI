@@ -27,9 +27,10 @@ class RPoint():
         z = self.x * P.y - self.y * P.x
         return RPoint( x,y,z )
     def __mul__( self, P ):
-        return self.x * P.x + self.y * P.y + self.z * P.z
-    def __mul__( self, a : float ):
-        return RPoint( self.x * a, self.y * a, self.z * a )
+        if isinstance( P, self.__class__ ):
+            return self.x * P.x + self.y * P.y + self.z * P.z
+        if isinstance( P, float ):
+            return RPoint( self.x * P, self.y * P, self.z * P )
 
 class RFrame():
     def __init__( self, Nx: RPoint, Ny: RPoint, Nz: RPoint ):

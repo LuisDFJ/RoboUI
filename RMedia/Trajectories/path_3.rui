@@ -1,0 +1,19 @@
+pos1 = (233,32,97);
+pos2 = (233,32,128);
+pos3 = (230,0,154);
+pos4 = (233,-34,129);
+pos5 = (233,-34,97);
+
+
+SETJ: (0,0,0);
+PASS: 10;
+MOVEJ: (pos1);
+PASS: 5;
+MOVEL: (pos2);
+MOVEL: (pos3);
+MOVEL: (pos4);
+MOVEL: (pos5);
+MOVEL: (pos1);
+MOVEC: (pos2), (pos3);
+MOVEC: (pos4), (pos5);
+

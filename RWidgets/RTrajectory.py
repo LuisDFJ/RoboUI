@@ -60,7 +60,7 @@ class RTrajectory( QtWidgets.QWidget ):
             traj = RTrajectories( filepath )
             self.c = 0
             self.trajectories = traj.runPath()
-            self.progress.setRange( 0, len( list( traj.runPath('once') ) ) )
+            self.progress.setRange( 0, len( list( traj.runPath('once') ) ) - 1 )
             self.progress.setValue( 0 )
             
         else:
