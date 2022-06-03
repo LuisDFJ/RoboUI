@@ -4,7 +4,7 @@ from RGLEngine.RTransformations import rotateX, rotateY, rotateZ, translate
 from RUtils.RAnglesUtil import getDGMAngle
 
 class RGenDGM():
-    def __init__(self, L1=36.0, L2=93.5, L3=203.0):
+    def __init__(self, L1=36.0, L2=93.5, L3=210.0):
         self.a     = [      0.0,     L2,     L3   ]
         self.alpha = [   pi/2,      0.0,      0.0   ]
         self.d     = [     L1,      0.0,      0.0   ]

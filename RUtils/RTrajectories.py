@@ -8,7 +8,7 @@ from RUtils.RInterpolation import RLinearInterpolator, RCircularInterpolator
 
 class RTrajectories():
     VALID_COMMANDS = [ "movej", "movel", "movec", "setj", "pass" ]
-    def __init__(self, file : str, mode : str = 'rad', res : float = 1, res_c : float = pi / 16 ):
+    def __init__(self, file : str, mode : str = 'rad', res : float = 0.5, res_c : float = pi / 64 ):
         self.file = file
         self.mode = mode
         self.res = res

@@ -3,7 +3,7 @@ from math import atan2, sqrt, cos, sin, degrees
 from RUtils.RAnglesUtil import getIGMAngle
 
 class RGenIGM():
-    def __init__( self, L1=36.0, L2=93.5, L3=203.0 ):
+    def __init__( self, L1=36.0, L2=93.5, L3=210.0 ):
         self.L1 = L1
         self.L2 = L2
         self.L3 = L3
